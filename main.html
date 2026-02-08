@@ -3,140 +3,99 @@
 <head>
   <meta charset="UTF-8">
   <title>Login Form</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-
-    form {
-      max-width: 300px;
-    }
-
-    input {
-      display: block;
-      margin: 10px 0;
-      padding: 8px;
-      width: 100%;
-    }
-
-    #existing {
-      display: none; /* Hidden initially */
-      margin-top: 10px;
-    }
-  </style>
 </head>
 <body>
 
-  <!-- 🔹 Heading -->
-  <h1>Login Form</h1>
+<h1>Login Form</h1>
 
-  <!-- 🔹 Login Form -->
-  <form id="loginForm">
+<form id="loginForm">
 
-    <!-- Username -->
-    <input
-      type="text"
-      id="username"
-      placeholder="Username"
-    />
+  <input
+    type="text"
+    id="username"
+    placeholder="Username"
+  />
 
-    <!-- Password -->
-    <input
-      type="password"
-      id="password"
-      placeholder="Password"
-    />
+  <input
+    type="password"
+    id="password"
+    placeholder="Password"
+  />
 
-    <!-- Remember Me -->
-    <label>
-      <input type="checkbox" id="checkbox" />
-      Remember me.
-    </label>
+  <label>
+    <input type="checkbox" id="checkbox" />
+    Remember me.
+  </label>
 
-    <!-- Submit Button -->
-    <input
-      type="submit"
-      id="submit"
-      value="Submit"
-    />
+  <input
+    type="submit"
+    id="submit"
+    value="Submit"
+  />
 
-  </form>
+</form>
 
-  <!-- Existing User Button -->
-  <button id="existing">
-    Login as existing user
-  </button>
+<button id="existing" style="display:none;">
+  Login as existing user
+</button>
 
-  <script>
-    const form = document.getElementById("loginForm");
-    const usernameInput = document.getElementById("username");
-    const passwordInput = document.getElementById("password");
-    const checkbox = document.getElementById("checkbox");
-    const existingBtn = document.getElementById("existing");
+<script>
+  const form = document.getElementById("loginForm");
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const checkbox = document.getElementById("checkbox");
+  const existingBtn = document.getElementById("existing");
 
-    /* -------------------------------
-       🔹 On Page Load
-    --------------------------------*/
-    window.onload = function () {
-      const savedUsername = localStorage.getItem("username");
-      const savedPassword = localStorage.getItem("password");
+  /* ---------------------------
+     Show button if data exists
+  ----------------------------*/
+  function checkExistingUser() {
+    const user = localStorage.getItem("username");
+    const pass = localStorage.getItem("password");
 
-      if (savedUsername && savedPassword) {
-        existingBtn.style.display = "block";
-      }
-    };
-
-    /* -------------------------------
-       🔹 Form Submit
-    --------------------------------*/
-    form.addEventListener("submit", function (e) {
-      e.preventDefault(); // Prevent page reload
-
-      const username = usernameInput.value;
-      const password = passwordInput.value;
-
-      alert(`Logged in as ${username}`);
-
-      if (checkbox.checked) {
-        // Save credentials
-        localStorage.setItem("username", username);
-        localStorage.setItem("password", password);
-      } else {
-        // Remove credentials
-        localStorage.removeItem("username");
-        localStorage.removeItem("password");
-      }
-
-      // Update existing user button visibility
-      toggleExistingUser();
-    });
-
-    /* -------------------------------
-       🔹 Existing User Login
-    --------------------------------*/
-    existingBtn.addEventListener("click", function () {
-      const savedUsername = localStorage.getItem("username");
-
-      if (savedUsername) {
-        alert(`Logged in as ${savedUsername}`);
-      }
-    });
-
-    /* -------------------------------
-       🔹 Helper Function
-    --------------------------------*/
-    function toggleExistingUser() {
-      const savedUsername = localStorage.getItem("username");
-      const savedPassword = localStorage.getItem("password");
-
-      if (savedUsername && savedPassword) {
-        existingBtn.style.display = "block";
-      } else {
-        existingBtn.style.display = "none";
-      }
+    if (user && pass) {
+      existingBtn.style.display = "block";
+    } else {
+      existingBtn.style.display = "none";
     }
-  </script>
+  }
+
+  // Run immediately (important for Cypress)
+  checkExistingUser();
+
+  /* ---------------------------
+     Submit Form
+  ----------------------------*/
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const username = usernameInput.value;
+    const password = passwordInput.value;
+
+    alert(`Logged in as ${username}`);
+
+    if (checkbox.checked) {
+      localStorage.setItem("username", username);
+      localStorage.setItem("password", password);
+    } else {
+      localStorage.removeItem("username");
+      localStorage.removeItem("password");
+    }
+
+    checkExistingUser();
+  });
+
+  /* ---------------------------
+     Existing User Login
+  ----------------------------*/
+  existingBtn.addEventListener("click", function () {
+    const savedUser = localStorage.getItem("username");
+
+    if (savedUser) {
+      alert(`Logged in as ${savedUser}`);
+    }
+  });
+</script>
 
 </body>
 </html>
