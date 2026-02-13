@@ -1,102 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Login Form</title>
+<meta charset="UTF-8">
+<title>Remember Me Login</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 40px;
+    }
+
+    form {
+        max-width: 300px;
+    }
+
+    input {
+        display: block;
+        margin: 10px 0;
+        padding: 8px;
+        width: 100%;
+    }
+
+    button {
+        margin-top: 10px;
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+
+    #existing {
+        display: none; /* Hidden initially */
+        margin-top: 15px;
+    }
+</style>
 </head>
+
 <body>
 
 <h1>Login Form</h1>
 
 <form id="loginForm">
 
-  <input
-    type="text"
-    id="username"
-    placeholder="Username"
-  />
+    <!-- Username -->
+    <input 
+        type="text" 
+        id="username" 
+        placeholder="Username"
+    >
 
-  <input
-    type="password"
-    id="password"
-    placeholder="Password"
-  />
+    <!-- Password -->
+    <input 
+        type="password" 
+        id="password" 
+        placeholder="Password"
+    >
 
-  <label>
-    <input type="checkbox" id="checkbox" />
-    Remember me.
-  </label>
+    <!-- Checkbox -->
+    <label>
+        <input type="checkbox" id="checkbox">
+        Remember me.
+    </label>
 
-  <input
-    type="submit"
-    id="submit"
-    value="Submit"
-  />
+    <!-- Submit -->
+    <input 
+        type="submit" 
+        id="submit" 
+        value="Submit"
+    >
 
 </form>
 
-<button id="existing" style="display:none;">
-  Login as existing user
-</button>
+<!-- Existing User Button -->
+<button id="existing">Login as existing user</button>
 
 <script>
-  const form = document.getElementById("loginForm");
-  const usernameInput = document.getElementById("username");
-  const passwordInput = document.getElementById("password");
-  const checkbox = document.getElementById("checkbox");
-  const existingBtn = document.getElementById("existing");
+/* ELEMENTS */
+const form = document.getElementById("loginForm");
+const username = document.getElementById("username");
+const password = document.getElementById("password");
+const checkbox = document.getElementById("checkbox");
+const existingBtn = document.getElementById("existing");
 
-  /* ---------------------------
-     Show button if data exists
-  ----------------------------*/
-  function checkExistingUser() {
-    const user = localStorage.getItem("username");
-    const pass = localStorage.getItem("password");
+/* PAGE LOAD — Check localStorage */
+window.onload = function () {
+    const savedUsername = localStorage.getItem("username");
+    const savedPassword = localStorage.getItem("password");
 
-    if (user && pass) {
-      existingBtn.style.display = "block";
-    } else {
-      existingBtn.style.display = "none";
+    if (savedUsername && savedPassword) {
+        existingBtn.style.display = "block";
     }
-  }
+};
 
-  // Run immediately (important for Cypress)
-  checkExistingUser();
-
-  /* ---------------------------
-     Submit Form
-  ----------------------------*/
-  form.addEventListener("submit", function (e) {
+/* FORM SUBMIT */
+form.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const username = usernameInput.value;
-    const password = passwordInput.value;
+    const user = username.value;
+    const pass = password.value;
 
-    alert(`Logged in as ${username}`);
+    alert(`Logged in as ${user}`);
 
     if (checkbox.checked) {
-      localStorage.setItem("username", username);
-      localStorage.setItem("password", password);
+        localStorage.setItem("username", user);
+        localStorage.setItem("password", pass);
+        existingBtn.style.display = "block";
     } else {
-      localStorage.removeItem("username");
-      localStorage.removeItem("password");
+        localStorage.removeItem("username");
+        localStorage.removeItem("password");
+        existingBtn.style.display = "none";
     }
+});
 
-    checkExistingUser();
-  });
+/* LOGIN AS EXISTING USER */
+existingBtn.addEventListener("click", function () {
+    const savedUsername = localStorage.getItem("username");
 
-  /* ---------------------------
-     Existing User Login
-  ----------------------------*/
-  existingBtn.addEventListener("click", function () {
-    const savedUser = localStorage.getItem("username");
-
-    if (savedUser) {
-      alert(`Logged in as ${savedUser}`);
+    if (savedUsername) {
+        alert(`Logged in as ${savedUsername}`);
     }
-  });
+});
 </script>
 
 </body>
 </html>
+
 
